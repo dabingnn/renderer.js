@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Example: Simple</title>
+    <style>
+      body {
+        text-align: center;
+        background: #333;
+
+        position: absolute;
+        top: 0; bottom: 0; left: 0; right: 0;
+        display: flex;
+        flex-direction: column;
+
+        /*user-select: none;
+        cursor: default;*/
+      }
+
+      h2 {
+        color: #f90;
+      }
+
+      .container {
+        flex: 1;
+        border: 1px solid #666;
+        margin: 3px;
+        overflow: hidden;
+
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        cursor: crosshair;
+      }
+
+      .container:focus {
+        outline: 0;
+        border-color: #09f;
+      }
+
+      #hline {
+        position: absolute;
+        height: 1px;
+        width: 100%;
+        background: #474747;
+      }
+
+      #vline {
+        position: absolute;
+        width: 1px;
+        height: 100%;
+        background: #474747;
+      }
+
+      #info {
+        position: absolute;
+        top: 5px;
+        left: 5px;
+        width: 200px;
+
+        padding: 5px;
+        border: 1px solid #666;
+        color: #666;
+        background: rgba(0,0,0,0.1);
+        text-align: left;
+      }
+    </style>
+    <script src="../node_modules/lstats.js/dist/lstats.dev.js"></script>
+    <script src="../dist/input.dev.js"></script>
+  </head>
+
+  <body>
+    <h2>Simple</h2>
+    <div id="input" class="container" tabindex="-1">
+      <div id="hline"></div>
+      <div id="vline"></div>
+      <div id="info"></div>
+    </div>
+    <script>
+      'use strict';
+
+      let memStats = new LStats(document.body, ['mb']);
+
+      let input = new Input(document.getElementById('input'));
+      let vline = document.getElementById('vline');
+      let hline = document.getElementById('hline');
+      let info = document.getElementById('info');
+
+      function animate() {
+        vline.style.left = `${input.mouseX}px`;
+        hline.style.top = `${input.mouseY}px`;
+        info.innerText = `Mouse Info:
+          wheel: ${input.mouseScrollX}, ${input.mouseScrollY}
+          pos: ${input.mouseX}, ${input.mouseY}
+        `;
+
+        // end of the frame
+        input.reset();
+        memStats.tick();
+
+        requestAnimationFrame(animate);
+      }
+      requestAnimationFrame(animate);
+    </script>
+  </body>
+</html>
