@@ -2,107 +2,76 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Example: Simple</title>
     <style>
       body {
-        text-align: center;
         background: #333;
+        color: #888;
+        margin: 0px;
 
-        position: absolute;
-        top: 0; bottom: 0; left: 0; right: 0;
         display: flex;
         flex-direction: column;
-
-        /*user-select: none;
-        cursor: default;*/
+        padding: 10px;
       }
 
-      h2 {
-        color: #f90;
-      }
-
-      .container {
-        flex: 1;
-        border: 1px solid #666;
-        margin: 3px;
-        overflow: hidden;
-
+      .view {
         position: relative;
+        flex: 1;
+      }
+
+      .toolbar {
         display: flex;
-        justify-content: center;
-        align-items: center;
+        margin-top: 10px;
 
-        cursor: crosshair;
+        font-size: 12px;
       }
 
-      .container:focus {
+      .toolbar > * {
+        margin-right: 10px;
+      }
+
+      .toolbar > *:last-child {
+        margin-right: 0px;
+      }
+
+      .fit {
+        position: absolute;
+        top: 0; bottom: 0; left: 0; right: 0;
+      }
+
+      canvas {
+        background: #09f;
+      }
+
+      canvas:focus {
         outline: 0;
-        border-color: #09f;
-      }
-
-      #hline {
-        position: absolute;
-        height: 1px;
-        width: 100%;
-        background: #474747;
-      }
-
-      #vline {
-        position: absolute;
-        width: 1px;
-        height: 100%;
-        background: #474747;
-      }
-
-      #info {
-        position: absolute;
-        top: 5px;
-        left: 5px;
-        width: 200px;
-
-        padding: 5px;
-        border: 1px solid #666;
-        color: #666;
-        background: rgba(0,0,0,0.1);
-        text-align: left;
       }
     </style>
-    <script src="../node_modules/lstats.js/dist/lstats.dev.js"></script>
-    <script src="../dist/input.dev.js"></script>
+
+    <!--<script src="../node_modules/vconsole/dist/vconsole.min.js"></script>-->
+    <!--<script src="../node_modules/spectorjs/dist/spector.bundle.js"></script>-->
+    <script src="../node_modules/lstats.js/dist/lstats.min.js"></script>
+    <script src="../node_modules/memop/dist/memop.min.js"></script>
+    <script src="../node_modules/vmath/dist/vmath.min.js"></script>
+    <script src="../node_modules/primitives.js/dist/primitives.min.js"></script>
+    <script src="../node_modules/scene-graph/dist/scene-graph.min.js"></script>
+    <script src="../node_modules/gfx.js/dist/gfx.dev.js"></script>
+    <script src="../dist/renderer.dev.js"></script>
+    <!--<script src="./resl.js"></script>-->
+    <script src="./shell.js"></script>
   </head>
 
-  <body>
-    <h2>Simple</h2>
-    <div id="input" class="container" tabindex="-1">
-      <div id="hline"></div>
-      <div id="vline"></div>
-      <div id="info"></div>
+  <body class="fit">
+    <div id="view" class="view">
+      <!--<canvas id="canvas" class="fit" tabindex="-1"></canvas>-->
     </div>
-    <script>
-      'use strict';
-
-      let memStats = new LStats(document.body, ['mb']);
-
-      let input = new Input(document.getElementById('input'));
-      let vline = document.getElementById('vline');
-      let hline = document.getElementById('hline');
-      let info = document.getElementById('info');
-
-      function animate() {
-        vline.style.left = `${input.mouseX}px`;
-        hline.style.top = `${input.mouseY}px`;
-        info.innerText = `Mouse Info:
-          wheel: ${input.mouseScrollX}, ${input.mouseScrollY}
-          pos: ${input.mouseX}, ${input.mouseY}
-        `;
-
-        // end of the frame
-        input.reset();
-        memStats.tick();
-
-        requestAnimationFrame(animate);
-      }
-      requestAnimationFrame(animate);
-    </script>
+    <div class="toolbar">
+      <div>
+        <input type="checkbox" id="showFPS"></input>FPS
+      </div>
+      <span style="flex: 1"></span>
+      <select id="exampleList">
+        <option value="./src/basic.js">Basic</option>
+      </select>
+    </div>
   </body>
 </html>

@@ -298,9 +298,9 @@ getpass@^0.1.1:
   dependencies:
     assert-plus "^1.0.0"
 
-gfx.js@^1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/gfx.js/-/gfx.js-1.0.3.tgz#f7fe301cf96068533b85e4195f474dfaba62eacf"
+gfx.js@^1.1.5:
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/gfx.js/-/gfx.js-1.1.5.tgz#be0fd540d0e6ea16d73f6c10de5bf65c11b59710"
 
 glob@^7.0.5:
   version "7.1.1"
@@ -518,9 +518,9 @@ loud-rejection@^1.0.0:
     currently-unhandled "^0.4.1"
     signal-exit "^3.0.0"
 
-lstats.js@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/lstats.js/-/lstats.js-1.2.0.tgz#adab6adc7cd318fae30a7a8511dd6cd68e7277df"
+lstats.js@^1.2.5:
+  version "1.2.5"
+  resolved "https://registry.yarnpkg.com/lstats.js/-/lstats.js-1.2.5.tgz#1a3a30591dac37f5aded482fd45fd6cc73f31d2d"
 
 map-obj@^1.0.0, map-obj@^1.0.1:
   version "1.0.1"
@@ -705,6 +705,12 @@ preview-server@^1.0.7:
     ip "^1.1.5"
     qrcode-terminal "^0.11.0"
 
+primitives.js@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/primitives.js/-/primitives.js-1.0.0.tgz#e96bd796d80a5acf44b14a3cdbeaccba38344f02"
+  dependencies:
+    vmath "^1.3.1"
+
 process-nextick-args@~1.0.6:
   version "1.0.7"
   resolved "https://registry.yarnpkg.com/process-nextick-args/-/process-nextick-args-1.0.7.tgz#150e20b756590ad3f91093f25a4f2ad8bff30ba3"
@@ -845,6 +851,12 @@ rollup@^0.41.4:
 safe-buffer@^5.0.1:
   version "5.0.1"
   resolved "https://registry.yarnpkg.com/safe-buffer/-/safe-buffer-5.0.1.tgz#d263ca54696cd8a306b5ca6551e92de57918fbe7"
+
+scene-graph@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/scene-graph/-/scene-graph-1.0.4.tgz#ffcd130209e0cb7bf75c721774343bf92125a5f9"
+  dependencies:
+    vmath "^1.1.0"
 
 "semver@2 || 3 || 4 || 5", semver@^5.3.0:
   version "5.3.0"
@@ -1027,9 +1039,9 @@ verror@1.3.6:
   dependencies:
     extsprintf "1.0.2"
 
-vmath@^1.3.1:
-  version "1.3.1"
-  resolved "https://registry.yarnpkg.com/vmath/-/vmath-1.3.1.tgz#54f6a522b519f4d771fd8f0f5b3981a81d9f37cd"
+vmath@^1.1.0, vmath@^1.3.1, vmath@^1.3.2:
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/vmath/-/vmath-1.3.2.tgz#66bc96d6cd0f4e9490956dcf9becb5637e1ec10b"
 
 wordwrap@~0.0.2:
   version "0.0.3"

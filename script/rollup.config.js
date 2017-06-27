@@ -26,7 +26,15 @@ module.exports = {
   ],
   moduleName,
   banner,
-  external: [],
-  globals: {},
+  external: [
+    'gfx',
+    'memop',
+    'vmath',
+  ],
+  globals: {
+    'gfx': 'window.gfx',
+    'memop': 'window.memop',
+    'vmath': 'window.vmath',
+  },
   sourceMap: true,
 };
