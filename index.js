@@ -1,3 +1,4 @@
+import create from './lib/init';
 import { enums } from './lib/enums';
 import { createMesh } from './lib/utils';
 
@@ -13,9 +14,12 @@ import Scene from './lib/scene/scene';
 
 import Renderer from './lib/renderer/base';
 import ForwardRenderer from './lib/renderer/forward';
-// import DeferredRenderer from './lib/deferred';
 
 let renderer = {
+  // functions
+  create,
+  createMesh,
+
   // classes
   Pass,
   Technique,
@@ -29,9 +33,6 @@ let renderer = {
 
   Renderer,
   ForwardRenderer,
-
-  // utils
-  createMesh,
 };
 Object.assign(renderer, enums);
 

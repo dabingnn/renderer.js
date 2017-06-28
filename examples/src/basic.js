@@ -1,11 +1,14 @@
 (() => {
-  let canvas = window.canvas;
-  let device = window.device;
-  let gfx = window.gfx;
-  let renderer = window.renderer;
-  let primitives = window.primitives;
-  let sgraph = window.sgraph;
-  let { vec3, color4 } = window.vmath;
+  const canvas = window.canvas;
+  const device = window.device;
+  const resl = window.resl;
+  const gfx = window.gfx;
+  const renderer = window.renderer;
+  const primitives = window.primitives;
+  const sgraph = window.sgraph;
+  const { vec3, color4 } = window.vmath;
+
+  let rsys = renderer.create(device);
 
   // create mesh
   let boxData = primitives.box(1, 1, 1, {
@@ -23,12 +26,12 @@
       attribute vec3 a_normal;
       attribute vec2 a_uv;
 
-      uniform mat4 model, view, proj;
+      uniform mat4 model, viewProj;
 
       varying vec2 uv;
 
       void main () {
-        vec4 pos = proj * view * model * vec4(a_position, 1);
+        vec4 pos = viewProj * model * vec4(a_position, 1);
         uv = a_uv;
 
         gl_Position = pos;
@@ -54,7 +57,7 @@
   let pass = new renderer.Pass(program);
   let technique = new renderer.Technique(
     renderer.STAGE_OPAQUE, [
-      { name: 'mainTexture', type: renderer.PARAM_TEXTURE_2D, },
+      { name: 'mainTexture', type: renderer.PARAM_TEXTURE_2D },
       { name: 'color', type: renderer.PARAM_COLOR4, },
     ], [
       pass
@@ -64,9 +67,28 @@
     [technique],
     {
       // mainTexture: ???,
-      color: color4.new(1.0, 0.0, 0.0, 1.0),
+      color: color4.new(0.0, 0.5, 1.0, 1.0),
     }
   );
+
+  resl({
+    manifest: {
+      image: {
+        type: 'image',
+        src: './assets/uv_checker_02.jpg'
+      },
+    },
+    onDone (assets) {
+      let image = assets.image;
+      let texture = new gfx.Texture2D(device, {
+        width : image.width,
+        height : image.height,
+        mipmap: true,
+        images : [image]
+      });
+      material.setParameter('mainTexture', texture);
+    }
+  });
 
   // modelA
   let nodeA = new sgraph.Node('nodeA');
@@ -77,7 +99,7 @@
   modelA.addMaterial(material);
   modelA.setNode(nodeA);
 
-  // camera
+  // cameraA
   let nodeCam = new sgraph.Node('nodeCam');
   nodeCam.lpos = vec3.new(10, 10, 10);
   nodeCam.lookAt(vec3.new(0,0,0));
@@ -92,12 +114,11 @@
   scene.addModel(modelA);
 
   let time = 0;
-  let forward = new renderer.ForwardRenderer(device);
 
   // tick
   return function tick(dt) {
     time += dt;
 
-    forward.render(cameraA, scene);
+    rsys.forward.render(cameraA, scene);
   };
 })();
