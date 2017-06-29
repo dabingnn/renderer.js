@@ -6,8 +6,9 @@
   const renderer = window.renderer;
   const primitives = window.primitives;
   const sgraph = window.sgraph;
-  const { vec3, color4 } = window.vmath;
+  const { vec3, color4, randomRange } = window.vmath;
 
+  const orbit = window.orbit;
   let rsys = renderer.create(device);
 
   // create mesh
@@ -55,6 +56,11 @@
   });
   program.link();
   let pass = new renderer.Pass(program);
+  pass.setDepth(true, true);
+  // pass.setBlend(
+  //   gfx.BLEND_FUNC_ADD,
+  //   gfx.BLEND_SRC_ALPHA, gfx.BLEND_ONE_MINUS_SRC_ALPHA
+  // );
   let technique = new renderer.Technique(
     renderer.STAGE_OPAQUE, [
       { name: 'mainTexture', type: renderer.PARAM_TEXTURE_2D },
@@ -67,7 +73,7 @@
     [technique],
     {
       // mainTexture: ???,
-      color: color4.new(0.0, 0.5, 1.0, 1.0),
+      color: color4.new(1.0, 1.0, 1.0, 0.6),
     }
   );
 
@@ -82,7 +88,9 @@
       let image = assets.image;
       let texture = new gfx.Texture2D(device, {
         width : image.width,
-        height : image.height,
+        height: image.height,
+        wrapS: gfx.WRAP_CLAMP,
+        wrapT: gfx.WRAP_CLAMP,
         mipmap: true,
         images : [image]
       });
@@ -90,28 +98,36 @@
     }
   });
 
-  // modelA
-  let nodeA = new sgraph.Node('nodeA');
-  nodeA.lpos = vec3.new(0, 0.5, 0);
+  // scene
+  let scene = new renderer.Scene();
 
-  let modelA = new renderer.Model();
-  modelA.addMesh(meshBox);
-  modelA.addMaterial(material);
-  modelA.setNode(nodeA);
+  for (let i = 0; i < 100; ++i) {
+    // modelA
+    let nodeA = new sgraph.Node('nodeA');
+    nodeA.lpos = vec3.new(
+      randomRange(-10, 10),
+      randomRange(-5, 5),
+      randomRange(-10, 10)
+    );
+
+    let modelA = new renderer.Model();
+    modelA.addMesh(meshBox);
+
+    modelA.addMaterial(material);
+    modelA.setNode(nodeA);
+
+    scene.addModel(modelA);
+  }
 
   // cameraA
-  let nodeCam = new sgraph.Node('nodeCam');
-  nodeCam.lpos = vec3.new(10, 10, 10);
-  nodeCam.lookAt(vec3.new(0,0,0));
+  // let nodeCam = new sgraph.Node('nodeCam');
+  // nodeCam.lpos = vec3.new(10, 10, 10);
+  // nodeCam.lookAt(vec3.new(0,0,0));
 
   let cameraA = new renderer.Camera();
   cameraA._rect.w = canvas.width;
   cameraA._rect.h = canvas.height;
-  cameraA.setNode(nodeCam);
-
-  //
-  let scene = new renderer.Scene();
-  scene.addModel(modelA);
+  cameraA.setNode(orbit._node);
 
   let time = 0;
 
