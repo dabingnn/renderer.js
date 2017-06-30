@@ -18,31 +18,6 @@
   let front2 = vec3.create();
   let right2 = vec3.create();
 
-  let rotateAround = (function () {
-    let v3_tmp = vec3.create();
-    let q_tmp = quat.create();
-
-    return function (out, q, axis, rad) {
-      quat.invert(q_tmp, q);
-      vec3.transformQuat(v3_tmp, axis, q_tmp);
-      quat.fromAxisAngle(q_tmp, v3_tmp, rad);
-      quat.mul(out, q, q_tmp);
-
-      return out;
-    };
-  })();
-
-  let rotateAroundLocal = (function () {
-    let q_tmp = quat.create();
-
-    return function (out, q, axis, rad) {
-      quat.fromAxisAngle(q_tmp, axis, rad);
-      quat.mul(out, q, q_tmp);
-
-      return out;
-    };
-  })();
-
   class Orbit {
     constructor(node, input) {
       this._node = node;
@@ -132,10 +107,8 @@
       let rot = this._destRot;
 
       // calculate curRot
-      rotateAroundLocal(rot, rot, v3_r, this._rotX);
-      rotateAround(rot, rot, v3_u, this._rotY);
-      // quat.mul(destRot, destRot, this._curRot);
-
+      quat.rotateX(rot, rot, this._rotX);
+      quat.rotateAround(rot, rot, v3_u, this._rotY);
       quat.slerp(this._curRot, this._curRot, rot, dt * damping);
 
       // calculate curEye

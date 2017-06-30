@@ -64,6 +64,8 @@
 
       // update
       function animate(timestamp) {
+        window.reqID = requestAnimationFrame(animate);
+
         if (timestamp === undefined) {
           timestamp = 0;
         }
@@ -78,8 +80,6 @@
         }
 
         window.input.reset();
-
-        window.reqID = requestAnimationFrame(animate);
       }
 
       window.reqID = window.requestAnimationFrame(() => {
@@ -109,8 +109,8 @@
       return;
     }
 
-    // let spector = new window.SPECTOR.Spector();
-    // spector.displayUI();
+    let spector = new window.SPECTOR.Spector();
+    spector.displayUI();
 
     let view = document.getElementById('view');
     let showFPS = document.getElementById('showFPS');

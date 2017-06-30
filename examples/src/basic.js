@@ -6,16 +6,16 @@
   const renderer = window.renderer;
   const primitives = window.primitives;
   const sgraph = window.sgraph;
-  const { vec3, color4, randomRange } = window.vmath;
+  const { vec3, color4, quat, randomRange } = window.vmath;
 
   const orbit = window.orbit;
   let rsys = renderer.create(device);
 
   // create mesh
   let boxData = primitives.box(1, 1, 1, {
-    widthSegments: 10,
-    heightSegments: 10,
-    lengthSegments: 10,
+    widthSegments: 1,
+    heightSegments: 1,
+    lengthSegments: 1,
   });
   let meshBox = renderer.createMesh(device, boxData);
 
@@ -56,13 +56,17 @@
   });
   program.link();
   let pass = new renderer.Pass(program);
-  pass.setDepth(true, true);
-  // pass.setBlend(
-  //   gfx.BLEND_FUNC_ADD,
-  //   gfx.BLEND_SRC_ALPHA, gfx.BLEND_ONE_MINUS_SRC_ALPHA
-  // );
+  // pass.setDepth(true, true);
+  pass.setDepth(true, false);
+  pass.setBlend(
+    gfx.BLEND_FUNC_ADD,
+    gfx.BLEND_SRC_ALPHA, gfx.BLEND_ONE_MINUS_SRC_ALPHA,
+    gfx.BLEND_FUNC_ADD,
+    gfx.BLEND_ONE, gfx.BLEND_ONE
+  );
   let technique = new renderer.Technique(
-    renderer.STAGE_OPAQUE, [
+    renderer.STAGE_TRANSPARENT,
+    [
       { name: 'mainTexture', type: renderer.PARAM_TEXTURE_2D },
       { name: 'color', type: renderer.PARAM_COLOR4, },
     ], [
@@ -101,33 +105,37 @@
   // scene
   let scene = new renderer.Scene();
 
+  // models
   for (let i = 0; i < 100; ++i) {
-    // modelA
-    let nodeA = new sgraph.Node('nodeA');
-    nodeA.lpos = vec3.new(
+    let node = new sgraph.Node('node');
+    vec3.set(node.lpos,
+      randomRange(-50, 50),
       randomRange(-10, 10),
-      randomRange(-5, 5),
-      randomRange(-10, 10)
+      randomRange(-50, 50)
+    );
+    quat.fromEuler(node.lrot,
+      randomRange(0, 360),
+      randomRange(0, 360),
+      randomRange(0, 360),
+    );
+    vec3.set(node.lscale,
+      randomRange(1, 5),
+      randomRange(1, 5),
+      randomRange(1, 5)
     );
 
-    let modelA = new renderer.Model();
-    modelA.addMesh(meshBox);
+    let model = new renderer.Model();
+    model.addMesh(meshBox);
 
-    modelA.addMaterial(material);
-    modelA.setNode(nodeA);
+    model.addMaterial(material);
+    model.setNode(node);
 
-    scene.addModel(modelA);
+    scene.addModel(model);
   }
 
-  // cameraA
-  // let nodeCam = new sgraph.Node('nodeCam');
-  // nodeCam.lpos = vec3.new(10, 10, 10);
-  // nodeCam.lookAt(vec3.new(0,0,0));
-
-  let cameraA = new renderer.Camera();
-  cameraA._rect.w = canvas.width;
-  cameraA._rect.h = canvas.height;
-  cameraA.setNode(orbit._node);
+  // camera
+  let camera = new renderer.Camera();
+  camera.setNode(orbit._node);
 
   let time = 0;
 
@@ -135,6 +143,9 @@
   return function tick(dt) {
     time += dt;
 
-    rsys.forward.render(cameraA, scene);
+    camera._rect.w = canvas.width;
+    camera._rect.h = canvas.height;
+
+    rsys.forward.render(camera, scene);
   };
 })();
