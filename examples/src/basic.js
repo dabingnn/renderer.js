@@ -1,11 +1,13 @@
 (() => {
-  const canvas = window.canvas;
-  const device = window.device;
-  const resl = window.resl;
-  const gfx = window.gfx;
-  const renderer = window.renderer;
-  const primitives = window.primitives;
-  const sgraph = window.sgraph;
+  const {
+    canvas,
+    device,
+    resl,
+    gfx,
+    renderer,
+    primitives,
+    sgraph,
+  } = window;
   const { vec3, color4, quat, randomRange } = window.vmath;
 
   const orbit = window.orbit;
@@ -55,6 +57,7 @@
     `,
   });
   program.link();
+
   let pass = new renderer.Pass(program);
   // pass.setDepth(true, true);
   pass.setDepth(true, false);
@@ -98,7 +101,7 @@
         mipmap: true,
         images : [image]
       });
-      material.setParameter('mainTexture', texture);
+      material.setValue('mainTexture', texture);
     }
   });
 
@@ -116,7 +119,7 @@
     quat.fromEuler(node.lrot,
       randomRange(0, 360),
       randomRange(0, 360),
-      randomRange(0, 360),
+      randomRange(0, 360)
     );
     vec3.set(node.lscale,
       randomRange(1, 5),
@@ -132,6 +135,11 @@
 
     scene.addModel(model);
   }
+
+  // create grid
+  let gridNode = new sgraph.Node('grid');
+  let grid = window.createGrid(gridNode, 100, 100, 100 );
+  scene.addModel(grid);
 
   // camera
   let camera = new renderer.Camera();

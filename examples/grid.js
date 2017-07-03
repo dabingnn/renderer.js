@@ -1,0 +1,82 @@
+'use strict';
+
+window.createGrid = function (node, width, length, seg) {
+  const {
+    gfx, device, renderer
+  } = window;
+
+  const { color4 } = window.vmath;
+
+  // create mesh
+  let vertices = [];
+  let hw = width * 0.5;
+  let hl = length * 0.5;
+  let dw = width / seg;
+  let dl = length / seg;
+
+  for (let x = -hw; x <= hw; x += dw) {
+    vertices.push(x, 0, -hl);
+    vertices.push(x, 0, hl);
+  }
+
+  for (let z = -hl; z <= hl; z += dl) {
+    vertices.push(-hw, 0, z);
+    vertices.push(hw, 0, z);
+  }
+
+  let mesh = renderer.createMesh(device, {
+    positions: vertices
+  });
+  mesh._primitiveType = gfx.PT_LINES;
+
+  // create material
+  let program = new gfx.Program(device, {
+    vert: `
+      precision highp float;
+
+      attribute vec3 a_position;
+      uniform mat4 model, viewProj;
+
+      void main() {
+        vec4 pos = viewProj * model * vec4(a_position, 1);
+
+        gl_Position = pos;
+      }
+    `,
+    frag: `
+      precision highp float;
+      uniform vec4 color;
+
+      void main () {
+        gl_FragColor = color;
+      }
+    `,
+  });
+  program.link();
+  let pass = new renderer.Pass(program);
+  pass.setDepth(true, true);
+  let technique = new renderer.Technique(
+    renderer.STAGE_OPAQUE,
+    [
+      { name: 'color', type: renderer.PARAM_COLOR4, },
+    ],
+    [
+      pass
+    ]
+  );
+  let material = new renderer.Material(
+    [
+      technique
+    ],
+    {
+      color: color4.new(0.4, 0.4, 0.4, 1.0),
+    }
+  );
+
+  let model = new renderer.Model();
+  model.addMesh(mesh);
+  model.addMaterial(material);
+  model.setNode(node);
+
+  return model;
+};
