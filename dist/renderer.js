@@ -1,6 +1,6 @@
 
 /*
- * renderer.js v1.1.0
+ * renderer.js v1.1.1
  * (c) 2017 @Johnny Wu
  * Released under the MIT License.
  */
@@ -204,7 +204,7 @@ var Renderer = (function () {
     // TODO: use camera's clearFalgs
     device.setViewport(0, 0, camera._rect.w, camera._rect.h);
     device.clear({
-      color: [0.5, 0.5, 0.5, 1],
+      color: [0.3, 0.3, 0.3, 1],
       depth: 1
     });
 
@@ -282,17 +282,6 @@ var Renderer = (function () {
     _int3_pool.reset();
     _int4_pool.reset();
 
-    var count = mesh._vertexBuffer.count;
-
-    // vertex buffer
-    device.setVertexBuffer(0, mesh._vertexBuffer);
-
-    // index buffer
-    if (mesh._indexBuffer) {
-      device.setIndexBuffer(mesh._indexBuffer);
-      count = mesh._indexBuffer.count;
-    }
-
     // set common uniforms
     // TODO: try commit this depends on material
     // {
@@ -305,9 +294,9 @@ var Renderer = (function () {
 
     // set technique uniforms
     var slot = 0;
-    for (var i = 0; i < technique._properties.length; ++i) {
-      var prop = technique._properties[i];
-      var param = material.getParameter(prop.name);
+    for (var i = 0; i < technique._parameters.length; ++i) {
+      var prop = technique._parameters[i];
+      var param = material.getValue(prop.name);
 
       if (param === undefined) {
         param = prop.val;
@@ -335,12 +324,23 @@ var Renderer = (function () {
       }
     }
 
-    // primitive type
-    device.setPrimitiveType(mesh._primitiveType);
-
     // for each pass
     for (var i$1 = 0; i$1 < technique._passes.length; ++i$1) {
       var pass = technique._passes[i$1];
+
+      var count = mesh._vertexBuffer.count;
+
+      // set vertex buffer
+      device.setVertexBuffer(0, mesh._vertexBuffer);
+
+      // set index buffer
+      if (mesh._indexBuffer) {
+        device.setIndexBuffer(mesh._indexBuffer);
+        count = mesh._indexBuffer.count;
+      }
+
+      // set primitive type
+      device.setPrimitiveType(mesh._primitiveType);
 
       // set program
       device.setProgram(pass._program);
@@ -451,7 +451,11 @@ var ForwardRenderer = (function (Renderer$$1) {
 
     // sort items
     items.sort(function (a, b) {
-      a.technique.sortID() - b.technique.sortID();
+      if (a.technique._layer !== b.technique._layer) {
+        return a.technique._layer - b.technique._layer;
+      }
+
+      return a.technique.sortID() - b.technique.sortID();
     });
 
     // draw it
@@ -485,6 +489,10 @@ var ForwardRenderer = (function (Renderer$$1) {
 
     // sort items
     items.sort(function (a, b) {
+      if (a.technique._layer !== b.technique._layer) {
+        return a.technique._layer - b.technique._layer;
+      }
+
       return b.zdist - a.zdist;
     });
 
@@ -724,11 +732,14 @@ Pass.prototype.setStencilBack = function setStencilBack (
 
 var _genID = 0;
 
-var Technique = function Technique(stages, props, passes) {
+var Technique = function Technique(stages, parameters, passes, layer) {
+  if ( layer === void 0 ) layer = 0;
+
   this._id = _genID++;
-  this._passes = passes;
-  this._properties = props; // {name, type, size, val}
   this._stages = stages;
+  this._parameters = parameters; // {name, type, size, val}
+  this._passes = passes;
+  this._layer = layer;
   // TODO: this._version = 'webgl' or 'webgl2' // ????
 };
 
@@ -744,11 +755,11 @@ Technique.prototype.sortID = function sortID () {
   ) >>> 0;
 };
 
-var Material = function Material(techniques, params) {
-  if ( params === void 0 ) params = {};
+var Material = function Material(techniques, values) {
+  if ( values === void 0 ) values = {};
 
   this._techniques = techniques;
-  this._params = params;
+  this._values = values;
 
   // TODO: check if params is valid for current technique???
 };
@@ -766,173 +777,157 @@ Material.prototype.getTechnique = function getTechnique (stage) {
   return null;
 };
 
-Material.prototype.getParameter = function getParameter (name) {
-  return this._params[name];
+Material.prototype.getValue = function getValue (name) {
+  return this._values[name];
 };
 
-Material.prototype.setParameter = function setParameter (name, value) {
+Material.prototype.setValue = function setValue (name, value) {
   // TODO: check if params is valid for current technique???
 
-  this._params[name] = value;
+  this._values[name] = value;
 };
 
-var Light = (function () {
-  function anonymous() {
-    this._node = null;
-    this._color = vmath.color3.create();
+var Light = function Light() {
+  this._node = null;
+  this._color = vmath.color3.create();
+};
+
+Light.prototype.setNode = function setNode (node) {
+  this._node = node;
+};
+
+var Camera = function Camera() {
+  this._node = null;
+  this._perspective = enums.PP_PROJECTION;
+
+  // projection properties
+  this._near = 0.01;
+  this._far = 1000.0;
+  this._fov = Math.PI/4.0; // vertical fov
+  // this._aspect = 16.0/9.0; // DISABLE: use _rect.w/_rect.h
+
+  // ortho properties
+  this._orthoHeight = 10;
+
+  // view properties
+  this._rect = {
+    x: 0, y: 0, w: 1, h: 1
+  };
+  this._scissor = {
+    x: 0, y: 0, w: 1, h: 1
+  };
+
+  // clear options
+  this._color = vmath.color4.create();
+  // TODO: this._clearFlags
+
+  // matrix
+  this._view = vmath.mat4.create();
+  this._proj = vmath.mat4.create();
+  this._viewProj = vmath.mat4.create();
+  this._invViewProj = vmath.mat4.create();
+};
+
+Camera.prototype.setNode = function setNode (node) {
+  this._node = node;
+};
+
+Camera.prototype.updateMatrix = function updateMatrix () {
+  // view matrix
+  this._node.getWorldMatrix(this._view);
+  vmath.mat4.invert(this._view, this._view);
+
+  // projection matrix
+  // TODO: if this._projDirty
+  var aspect = this._rect.w / this._rect.h;
+  if (this._perspective === enums.PP_PROJECTION) {
+    vmath.mat4.perspective(this._proj,
+      this._fov,
+      aspect,
+      this._near,
+      this._far
+    );
+  } else {
+    var x = this._orthoHeight * aspect;
+    var y = this._orthoHeight;
+    vmath.mat4.ortho(this._proj,
+      -x, x, -y, y, this._near, this._far
+    );
   }
 
-  anonymous.prototype.setNode = function setNode (node) {
-    this._node = node;
-  };
+  // view-projection
+  vmath.mat4.mul(this._viewProj, this._proj, this._view);
+  vmath.mat4.invert(this._invViewProj, this._viewProj);
+};
 
-  return anonymous;
-}());
+var Model = function Model() {
+  this._node = null;
+  this._meshes = [];
+  this._materials = [];
+};
 
-var Camera = (function () {
-  function anonymous() {
-    this._node = null;
-    this._perspective = enums.PP_PROJECTION;
+var prototypeAccessors = { meshCount: {} };
 
-    // projection properties
-    this._near = 0.01;
-    this._far = 1000.0;
-    this._fov = Math.PI/4.0; // vertical fov
-    // this._aspect = 16.0/9.0; // DISABLE: use _rect.w/_rect.h
+Model.prototype.setNode = function setNode (node) {
+  this._node = node;
+};
 
-    // ortho properties
-    this._orthoHeight = 10;
+Model.prototype.addMesh = function addMesh (mesh) {
+  if (this._meshes.indexOf(mesh) !== -1) {
+    return;
+  }
+  this._meshes.push(mesh);
+};
 
-    // view properties
-    this._rect = {
-      x: 0, y: 0, w: 1, h: 1
-    };
-    this._scissor = {
-      x: 0, y: 0, w: 1, h: 1
-    };
+Model.prototype.addMaterial = function addMaterial (material) {
+  if (this._materials.indexOf(material) !== -1) {
+    return;
+  }
+  this._materials.push(material);
+};
 
-    // clear options
-    this._color = vmath.color4.create();
-    // TODO: this._clearFlags
+prototypeAccessors.meshCount.get = function () {
+  return this._meshes.length;
+};
 
-    // matrix
-    this._view = vmath.mat4.create();
-    this._proj = vmath.mat4.create();
-    this._viewProj = vmath.mat4.create();
-    this._invViewProj = vmath.mat4.create();
+Model.prototype.getDrawItem = function getDrawItem (out, index) {
+  if (index >= this._meshes.length ) {
+    out.node = null;
+    out.mesh = null;
+    out.material = null;
+
+    return;
   }
 
-  anonymous.prototype.setNode = function setNode (node) {
-    this._node = node;
-  };
-
-  anonymous.prototype.updateMatrix = function updateMatrix () {
-    // view matrix
-    this._node.getWorldMatrix(this._view);
-    vmath.mat4.invert(this._view, this._view);
-
-    // projection matrix
-    // TODO: if this._projDirty
-    var aspect = this._rect.w / this._rect.h;
-    if (this._perspective === enums.PP_PROJECTION) {
-      vmath.mat4.perspective(this._proj,
-        this._fov,
-        aspect,
-        this._near,
-        this._far
-      );
-    } else {
-      var x = this._orthoHeight * aspect;
-      var y = this._orthoHeight;
-      vmath.mat4.ortho(this._proj,
-        -x, x, -y, y, this._near, this._far
-      );
-    }
-
-    // view-projection
-    vmath.mat4.mul(this._viewProj, this._proj, this._view);
-    vmath.mat4.invert(this._invViewProj, this._viewProj);
-  };
-
-  return anonymous;
-}());
-
-var Model = (function () {
-  function anonymous() {
-    this._node = null;
-    this._meshes = [];
-    this._materials = [];
+  out.node = this._node;
+  out.mesh = this._meshes[index];
+  if (index < this._materials.length) {
+    out.material = this._materials[index];
+  } else {
+    out.material = this._materials[this._materials.length-1];
   }
+};
 
-  var prototypeAccessors = { meshCount: {} };
+Object.defineProperties( Model.prototype, prototypeAccessors );
 
-  anonymous.prototype.setNode = function setNode (node) {
-    this._node = node;
-  };
+var Scene = function Scene() {
+  this._lights = new memop.FixedArray(16);
+  this._models = new memop.FixedArray(16);
+};
 
-  anonymous.prototype.addMesh = function addMesh (mesh) {
-    if (this._meshes.indexOf(mesh) !== -1) {
-      return;
-    }
-    this._meshes.push(mesh);
-  };
-
-  anonymous.prototype.addMaterial = function addMaterial (material) {
-    if (this._materials.indexOf(material) !== -1) {
-      return;
-    }
-    this._materials.push(material);
-  };
-
-  prototypeAccessors.meshCount.get = function () {
-    return this._meshes.length;
-  };
-
-  anonymous.prototype.getDrawItem = function getDrawItem (out, index) {
-    if (index >= this._meshes.length ) {
-      out.node = null;
-      out.mesh = null;
-      out.material = null;
-
-      return;
-    }
-
-    out.node = this._node;
-    out.mesh = this._meshes[index];
-    if (index < this._materials.length) {
-      out.material = this._materials[index];
-    } else {
-      out.material = this._materials[this._materials.length-1];
-    }
-  };
-
-  Object.defineProperties( anonymous.prototype, prototypeAccessors );
-
-  return anonymous;
-}());
-
-var Scene = (function () {
-  function anonymous() {
-    this._lights = new memop.FixedArray(16);
-    this._models = new memop.FixedArray(16);
+Scene.prototype.addModel = function addModel (model) {
+  var idx = this._models.indexOf(model);
+  if (idx === -1) {
+    this._models.push(model);
   }
+};
 
-  anonymous.prototype.addModel = function addModel (model) {
-    var idx = this._models.indexOf(model);
-    if (idx === -1) {
-      this._models.push(model);
-    }
-  };
-
-  anonymous.prototype.removeModel = function removeModel (model) {
-    var idx = this._models.indexOf(model);
-    if (idx !== -1) {
-      this._models.fastRemove(idx);
-    }
-  };
-
-  return anonymous;
-}());
+Scene.prototype.removeModel = function removeModel (model) {
+  var idx = this._models.indexOf(model);
+  if (idx !== -1) {
+    this._models.fastRemove(idx);
+  }
+};
 
 var renderer = {
   // functions

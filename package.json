@@ -1,8 +1,9 @@
 {
   "name": "renderer.js",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "A forward renderer",
   "main": "dist/renderer.js",
+  "jsnext:main": "index.js",
   "scripts": {
     "build:dev": "rollup -c ./script/rollup.config.js",
     "build:min": "uglifyjs ./dist/renderer.dev.js --mangle --source-map url=renderer.min.js.map -o ./dist/renderer.min.js",
