@@ -7,13 +7,16 @@
   ],
   "techniques": [
     {
-      "stages": "STAGE_OPAQUE",
-      "parameters": "tex_2d mainTexture color4 color",
+      "stages": "opaque",
+      "parameters": {
+        "mainTexture": {"type": "tex2d", "value": "xxx"},
+        "color": {"type": "color4", "value": "0x00ff00ff"}
+      },
       "passes": [
         {
           "blend": "add src_alpha one_minus_src_alpha",
           "blendAlpha": "add one one",
-          "blendColor": "4294967295",
+          "blendColor": "0xff00ff00",
           "cull": "back",
           "depth": "less false",
           "stencil": "always 0x0 0xff keep keep keep 0xff",
