@@ -21,62 +21,6 @@
   });
   let meshBox = renderer.createMesh(device, boxData);
 
-  // create material
-  let program = new gfx.Program(device, {
-    vert: `
-      precision highp float;
-      attribute vec3 a_position;
-      attribute vec3 a_normal;
-      attribute vec2 a_uv;
-
-      uniform mat4 model, viewProj;
-
-      varying vec2 uv;
-
-      void main () {
-        vec4 pos = viewProj * model * vec4(a_position, 1);
-        uv = a_uv;
-
-        gl_Position = pos;
-      }
-    `,
-    frag: `
-      precision highp float;
-      uniform sampler2D mainTexture;
-      uniform vec4 color;
-
-      varying vec2 uv;
-
-      void main () {
-        gl_FragColor = texture2D(mainTexture, uv) * color;
-
-        if (!gl_FrontFacing) {
-          gl_FragColor *= 0.4;
-        }
-      }
-    `,
-  });
-  program.link();
-
-  let pass = new renderer.Pass(program);
-  // pass.setDepth(true, true);
-  pass.setDepth(true, false);
-  pass.setBlend(
-    gfx.BLEND_FUNC_ADD,
-    gfx.BLEND_SRC_ALPHA, gfx.BLEND_ONE_MINUS_SRC_ALPHA,
-    gfx.BLEND_FUNC_ADD,
-    gfx.BLEND_ONE, gfx.BLEND_ONE
-  );
-  let technique = new renderer.Technique(
-    renderer.STAGE_TRANSPARENT,
-    [
-      { name: 'mainTexture', type: renderer.PARAM_TEXTURE_2D },
-      { name: 'color', type: renderer.PARAM_COLOR4, },
-    ], [
-      pass
-    ]
-  );
-
   // scene
   let scene = new renderer.Scene();
 
