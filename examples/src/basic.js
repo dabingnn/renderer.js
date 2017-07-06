@@ -50,9 +50,9 @@
       void main () {
         gl_FragColor = texture2D(mainTexture, uv) * color;
 
-        if (!gl_FrontFacing) {
-          gl_FragColor *= 0.4;
-        }
+        // if (!gl_FrontFacing) {
+        //   gl_FragColor.r *= 0.4;
+        // }
       }
     `,
   });
@@ -60,6 +60,7 @@
 
   let pass = new renderer.Pass(program);
   // pass.setDepth(true, true);
+  pass.setCullMode(gfx.CULL_FRONT);
   pass.setDepth(true, false);
   pass.setBlend(
     gfx.BLEND_FUNC_ADD,
@@ -67,13 +68,24 @@
     gfx.BLEND_FUNC_ADD,
     gfx.BLEND_ONE, gfx.BLEND_ONE
   );
+
+  let pass1 = new renderer.Pass(program);
+  pass1.setDepth(true, false);
+  pass1.setBlend(
+    gfx.BLEND_FUNC_ADD,
+    gfx.BLEND_SRC_ALPHA, gfx.BLEND_ONE_MINUS_SRC_ALPHA,
+    gfx.BLEND_FUNC_ADD,
+    gfx.BLEND_ONE, gfx.BLEND_ONE
+  );
+
   let technique = new renderer.Technique(
     renderer.STAGE_TRANSPARENT,
     [
       { name: 'mainTexture', type: renderer.PARAM_TEXTURE_2D },
       { name: 'color', type: renderer.PARAM_COLOR4, },
     ], [
-      pass
+      pass,
+      pass1
     ]
   );
   let material = new renderer.Material(
