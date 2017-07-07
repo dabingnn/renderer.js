@@ -1,6 +1,6 @@
 import create from './lib/init';
 import { enums } from './lib/enums';
-import { createMesh } from './lib/utils';
+import { createMesh, parseMaterial } from './lib/utils';
 
 import Pass from './lib/resources/pass';
 import Technique from './lib/resources/technique';
@@ -19,6 +19,7 @@ let renderer = {
   // functions
   create,
   createMesh,
+  parseMaterial,
 
   // classes
   Pass,
