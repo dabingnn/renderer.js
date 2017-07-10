@@ -1,0 +1,29 @@
+{
+  "vertexShaders" : [
+    "\n      precision highp float;\n      attribute vec3 a_position;\n      attribute vec3 a_normal;\n      attribute vec2 a_uv;\n\n      uniform mat4 model, viewProj;\n\n      varying vec2 uv;\n\n      void main () {\n        vec4 pos = viewProj * model * vec4(a_position, 1);\n        uv = a_uv;\n\n        gl_Position = pos;\n      }\n    "
+  ],
+  "fragmentShaders" : [
+    "\n      precision highp float;\n      uniform sampler2D mainTexture;\n      uniform vec4 color;\n\n      varying vec2 uv;\n\n      void main () {\n        gl_FragColor = texture2D(mainTexture, uv) * color;\n\n        if (!gl_FrontFacing) {\n          gl_FragColor *= 0.4;\n        }\n      }\n    "
+  ],
+  "techniques": [
+    {
+      "stages": "opaque",
+      "parameters": {
+        "mainTexture": {"type": "tex2d", "value": "xxx"},
+        "color": {"type": "color4", "value": "0x00ff00ff"}
+      },
+      "passes": [
+        {
+          "blend": "add src_alpha one_minus_src_alpha",
+          "blendAlpha": "add one one",
+          "blendColor": "0xff00ff00",
+          "cull": "back",
+          "depth": "less false",
+          "stencil": "always 0x0 0xff keep keep keep 0xff",
+          "stencilBack": "always 0x0 0xff keep keep keep 0xff",
+          "program": "0 0"
+        }
+      ]
+    }
+  ]
+}
