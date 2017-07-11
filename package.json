@@ -5,6 +5,7 @@
   "main": "dist/renderer.js",
   "jsnext:main": "index.js",
   "scripts": {
+    "build:shader": "node ./script/build-shader.js",
     "build:dev": "rollup -c ./script/rollup.config.js",
     "build:min": "uglifyjs ./dist/renderer.dev.js --mangle --source-map url=renderer.min.js.map -o ./dist/renderer.min.js",
     "release": "npm run build:dev && npm run build:min",
@@ -31,12 +32,14 @@
   "dependencies": {
     "gfx.js": "^1.1.5",
     "memop": "^1.4.2",
+    "mustache": "^2.3.0",
     "scene-graph": "^1.1.0",
     "vmath": "^1.4.0"
   },
   "devDependencies": {
     "electron": "^1.7.4",
     "fs-jetpack": "^1.1.0",
+    "glsl-tokenizer": "^2.1.2",
     "input.js": "^1.1.4",
     "lstats.js": "^1.2.6",
     "preview-server": "^1.0.7",

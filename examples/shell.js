@@ -3,11 +3,41 @@
 (() => {
 
   const { vec3 } = window.vmath;
+  const gfx = window.gfx;
 
   let nodeCam = new window.sgraph.Node('nodeCam');
   vec3.set(nodeCam.lpos, 10, 10, 10);
   nodeCam.lookAt(vec3.new(0, 0, 0));
   window.orbit = new window.Orbit(nodeCam, null);
+
+  function _builtin(device) {
+    let canvas = document.createElement('canvas');
+    let context = canvas.getContext('2d');
+
+    // default texture
+    canvas.width = canvas.height = 128;
+    context.fillStyle = '#ddd';
+    context.fillRect(0, 0, 128, 128);
+    context.fillStyle = '#555';
+    context.fillRect(0, 0, 64, 64);
+    context.fillStyle = '#555';
+    context.fillRect(64, 64, 64, 64);
+
+    let defaultTexture = new gfx.Texture2D(device, {
+      images: [canvas],
+      width: 128,
+      height: 128,
+      wrapS: gfx.WRAP_REPEAT,
+      wrapT: gfx.WRAP_REPEAT,
+      format: gfx.TEXTURE_FMT_RGB8,
+      mipmap: true,
+    });
+
+    return {
+      defaultTexture,
+      // defaultTextureCube, // TODO
+    };
+  }
 
   function _loadPromise(url) {
     return new Promise((resolve, reject) => {
@@ -52,13 +82,20 @@
       canvas.tabIndex = -1;
       view.appendChild(canvas);
 
-      window.canvas = canvas;
-      window.device = new window.gfx.Device(canvas);
-      window.input = new window.Input(canvas, {
+      let device = new window.gfx.Device(canvas);
+      let input = new window.Input(canvas, {
         lock: true
       });
+      let simpleRenderer = new window.SimpleRenderer(
+        device, _builtin(device)
+      );
 
-      window.orbit._input = window.input;
+      window.canvas = canvas;
+      window.device = device;
+      window.input = input;
+      window.simpleRenderer = simpleRenderer;
+      window.orbit._input = input;
+
       let tick = null;
       let lasttime = 0;
 
@@ -109,8 +146,8 @@
       return;
     }
 
-    let spector = new window.SPECTOR.Spector();
-    spector.displayUI();
+    // let spector = new window.SPECTOR.Spector();
+    // spector.displayUI();
 
     let view = document.getElementById('view');
     let showFPS = document.getElementById('showFPS');

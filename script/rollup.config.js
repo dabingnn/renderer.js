@@ -28,17 +28,17 @@ module.exports = {
   moduleName,
   banner,
   external: [
-    'gfx',
+    'gfx.js',
     'memop',
     'vmath',
   ],
   globals: {
-    'gfx': 'window.gfx',
+    'gfx.js': 'window.gfx',
     'memop': 'window.memop',
     'vmath': 'window.vmath',
   },
   sourceMap: true,
   plugins: [
-    buble(),
+    buble()
   ]
 };
