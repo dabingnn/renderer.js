@@ -1,12 +1,12 @@
 {
   "name": "renderer.js",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "A forward renderer",
   "main": "dist/renderer.js",
   "module": "index.js",
   "jsnext:main": "index.js",
   "bin": {
-    "shdc": "./bin/shdc"
+    "shdc": "./bin/shdc.js"
   },
   "scripts": {
     "prepare": "npm run build",
