@@ -1,6 +1,6 @@
 {
   "name": "renderer.js",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "A forward renderer",
   "main": "dist/renderer.js",
   "module": "index.js",
@@ -36,25 +36,25 @@
   },
   "homepage": "https://github.com/gamedev-js/renderer.js/issues",
   "dependencies": {
-    "gfx.js": "^1.2.3",
-    "memop": "^1.4.2",
-    "scene-graph": "^1.1.0",
-    "vmath": "^1.4.0"
+    "yargs": "^8.0.2"
   },
   "devDependencies": {
     "electron": "^1.7.4",
     "fs-jetpack": "^1.1.0",
+    "gfx.js": "^1.2.3",
     "glsl-tokenizer": "^2.1.2",
     "input.js": "^1.1.4",
     "lstats.js": "^1.2.6",
+    "memop": "^1.4.2",
     "preview-server": "^1.0.7",
     "primitives.js": "^1.0.0",
     "rollup": "^0.43.0",
     "rollup-plugin-buble": "^0.15.0",
     "rollup-watch": "^4.0.0",
+    "scene-graph": "^1.1.0",
     "spectorjs": "^0.2.3",
     "uglify-es": "^3.0.22",
-    "yargs": "^8.0.2"
+    "vmath": "^1.4.0"
   },
   "files": [
     "bin",
