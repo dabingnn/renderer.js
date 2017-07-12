@@ -22,42 +22,6 @@
   let meshBox = renderer.createMesh(device, boxData);
 
   // create material
-  // let program = new gfx.Program(device, {
-  //   vert: `
-  //     precision highp float;
-  //     attribute vec3 a_position;
-  //     attribute vec3 a_normal;
-  //     attribute vec2 a_uv;
-
-  //     uniform mat4 model, viewProj;
-
-  //     varying vec2 uv;
-
-  //     void main () {
-  //       vec4 pos = viewProj * model * vec4(a_position, 1);
-  //       uv = a_uv;
-
-  //       gl_Position = pos;
-  //     }
-  //   `,
-  //   frag: `
-  //     precision highp float;
-  //     uniform sampler2D mainTexture;
-  //     uniform vec4 color;
-
-  //     varying vec2 uv;
-
-  //     void main () {
-  //       gl_FragColor = texture2D(mainTexture, uv) * color;
-
-  //       if (!gl_FrontFacing) {
-  //         gl_FragColor.rgb *= 0.5;
-  //       }
-  //     }
-  //   `,
-  // });
-  // program.link();
-
   let pass = new renderer.Pass('simple');
   // pass.setDepth(true, true);
   pass.setCullMode(gfx.CULL_FRONT);
