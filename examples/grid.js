@@ -30,30 +30,31 @@ window.createGrid = function (node, width, length, seg) {
   mesh._primitiveType = gfx.PT_LINES;
 
   // create material
-  let program = new gfx.Program(device, {
-    vert: `
-      precision highp float;
+  // let program = new gfx.Program(device, {
+  //   vert: `
+  //     precision highp float;
 
-      attribute vec3 a_position;
-      uniform mat4 model, viewProj;
+  //     attribute vec3 a_position;
+  //     uniform mat4 model, viewProj;
 
-      void main() {
-        vec4 pos = viewProj * model * vec4(a_position, 1);
+  //     void main() {
+  //       vec4 pos = viewProj * model * vec4(a_position, 1);
 
-        gl_Position = pos;
-      }
-    `,
-    frag: `
-      precision highp float;
-      uniform vec4 color;
+  //       gl_Position = pos;
+  //     }
+  //   `,
+  //   frag: `
+  //     precision highp float;
+  //     uniform vec4 color;
 
-      void main () {
-        gl_FragColor = color;
-      }
-    `,
-  });
-  program.link();
-  let pass = new renderer.Pass(program);
+  //     void main () {
+  //       gl_FragColor = color;
+  //     }
+  //   `,
+  // });
+  // program.link();
+
+  let pass = new renderer.Pass('simple');
   pass.setDepth(true, true);
   let technique = new renderer.Technique(
     renderer.STAGE_OPAQUE,
@@ -70,6 +71,10 @@ window.createGrid = function (node, width, length, seg) {
     ],
     {
       color: color4.new(0.4, 0.4, 0.4, 1.0),
+    },
+    {
+      useTexture: false,
+      useColor: true,
     }
   );
 

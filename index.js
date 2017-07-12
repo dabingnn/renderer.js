@@ -1,4 +1,3 @@
-import create from './lib/init';
 import { enums } from './lib/enums';
 import { createMesh, parseMaterial } from './lib/utils';
 
@@ -12,12 +11,11 @@ import Camera from './lib/scene/camera';
 import Model from './lib/scene/model';
 import Scene from './lib/scene/scene';
 
-import Renderer from './lib/renderer/base';
-import ForwardRenderer from './lib/renderer/forward';
+import Base from './lib/renderer/base';
+import ProgramLib from './lib/program-lib/program-lib';
 
 let renderer = {
   // functions
-  create,
   createMesh,
   parseMaterial,
 
@@ -32,8 +30,8 @@ let renderer = {
   Model,
   Scene,
 
-  Renderer,
-  ForwardRenderer,
+  Base,
+  ProgramLib,
 };
 Object.assign(renderer, enums);
 

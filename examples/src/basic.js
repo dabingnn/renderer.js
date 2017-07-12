@@ -11,7 +11,7 @@
   const { vec3, color4, quat, randomRange } = window.vmath;
 
   const orbit = window.orbit;
-  let rsys = renderer.create(device);
+  const simpleRenderer = window.simpleRenderer;
 
   // create mesh
   let boxData = primitives.box(1, 1, 1, {
@@ -22,43 +22,43 @@
   let meshBox = renderer.createMesh(device, boxData);
 
   // create material
-  let program = new gfx.Program(device, {
-    vert: `
-      precision highp float;
-      attribute vec3 a_position;
-      attribute vec3 a_normal;
-      attribute vec2 a_uv;
+  // let program = new gfx.Program(device, {
+  //   vert: `
+  //     precision highp float;
+  //     attribute vec3 a_position;
+  //     attribute vec3 a_normal;
+  //     attribute vec2 a_uv;
 
-      uniform mat4 model, viewProj;
+  //     uniform mat4 model, viewProj;
 
-      varying vec2 uv;
+  //     varying vec2 uv;
 
-      void main () {
-        vec4 pos = viewProj * model * vec4(a_position, 1);
-        uv = a_uv;
+  //     void main () {
+  //       vec4 pos = viewProj * model * vec4(a_position, 1);
+  //       uv = a_uv;
 
-        gl_Position = pos;
-      }
-    `,
-    frag: `
-      precision highp float;
-      uniform sampler2D mainTexture;
-      uniform vec4 color;
+  //       gl_Position = pos;
+  //     }
+  //   `,
+  //   frag: `
+  //     precision highp float;
+  //     uniform sampler2D mainTexture;
+  //     uniform vec4 color;
 
-      varying vec2 uv;
+  //     varying vec2 uv;
 
-      void main () {
-        gl_FragColor = texture2D(mainTexture, uv) * color;
+  //     void main () {
+  //       gl_FragColor = texture2D(mainTexture, uv) * color;
 
-        // if (!gl_FrontFacing) {
-        //   gl_FragColor.r *= 0.4;
-        // }
-      }
-    `,
-  });
-  program.link();
+  //       if (!gl_FrontFacing) {
+  //         gl_FragColor.rgb *= 0.5;
+  //       }
+  //     }
+  //   `,
+  // });
+  // program.link();
 
-  let pass = new renderer.Pass(program);
+  let pass = new renderer.Pass('simple');
   // pass.setDepth(true, true);
   pass.setCullMode(gfx.CULL_FRONT);
   pass.setDepth(true, false);
@@ -69,7 +69,7 @@
     gfx.BLEND_ONE, gfx.BLEND_ONE
   );
 
-  let pass1 = new renderer.Pass(program);
+  let pass1 = new renderer.Pass('simple');
   pass1.setDepth(true, false);
   pass1.setBlend(
     gfx.BLEND_FUNC_ADD,
@@ -93,6 +93,10 @@
     {
       // mainTexture: ???,
       color: color4.new(1.0, 1.0, 1.0, 0.6),
+    },
+    {
+      useTexture: true,
+      useColor: true,
     }
   );
 
@@ -166,6 +170,6 @@
     camera._rect.w = canvas.width;
     camera._rect.h = canvas.height;
 
-    rsys.forward.render(camera, scene);
+    simpleRenderer.render(camera, scene);
   };
 })();

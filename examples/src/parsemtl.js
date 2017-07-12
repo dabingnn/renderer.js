@@ -11,7 +11,7 @@
   const { vec3, color4, quat, randomRange } = window.vmath;
 
   const orbit = window.orbit;
-  let rsys = renderer.create(device);
+  const simpleRenderer = window.simpleRenderer;
 
   // create mesh
   let boxData = primitives.box(1, 1, 1, {
@@ -106,6 +106,6 @@
     camera._rect.w = canvas.width;
     camera._rect.h = canvas.height;
 
-    rsys.forward.render(camera, scene);
+    simpleRenderer.render(camera, scene);
   };
 })();
