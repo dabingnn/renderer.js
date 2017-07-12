@@ -1,6 +1,6 @@
 {
   "name": "renderer.js",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "A forward renderer",
   "main": "dist/renderer.js",
   "module": "index.js",
@@ -36,13 +36,13 @@
   },
   "homepage": "https://github.com/gamedev-js/renderer.js/issues",
   "dependencies": {
+    "fs-jetpack": "^1.1.0",
+    "glsl-tokenizer": "^2.1.2",
     "yargs": "^8.0.2"
   },
   "devDependencies": {
     "electron": "^1.7.4",
-    "fs-jetpack": "^1.1.0",
     "gfx.js": "^1.2.3",
-    "glsl-tokenizer": "^2.1.2",
     "input.js": "^1.1.4",
     "lstats.js": "^1.2.6",
     "memop": "^1.4.2",
