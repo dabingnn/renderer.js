@@ -82,6 +82,10 @@
         {
           mainTexture: texture,
           color: color4.new(1.0, 1.0, 1.0, 0.6),
+        },
+        {
+          useTexture: true,
+          useColor: true,
         }
       );
       addModelstoScene(material);
