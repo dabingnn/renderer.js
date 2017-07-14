@@ -1,4 +1,4 @@
-import { enums } from './lib/enums';
+import enums from './lib/enums';
 import { createMesh, parseMaterial } from './lib/utils';
 
 import Pass from './lib/resources/pass';
