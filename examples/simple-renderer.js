@@ -38,11 +38,7 @@
 
       // sort items
       items.sort((a, b) => {
-        if (a.technique._layer !== b.technique._layer) {
-          return a.technique._layer - b.technique._layer;
-        }
-
-        return a.technique.sortID() - b.technique.sortID();
+        return a.technique._layer - b.technique._layer;
       });
 
       // draw it
