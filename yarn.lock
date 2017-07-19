@@ -564,9 +564,9 @@ getpass@^0.1.1:
   dependencies:
     assert-plus "^1.0.0"
 
-gfx.js@^1.2.3:
-  version "1.2.3"
-  resolved "https://registry.yarnpkg.com/gfx.js/-/gfx.js-1.2.3.tgz#dd836b3647710dd5e2be52b248e861711c54a927"
+gfx.js@^1.2.4:
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/gfx.js/-/gfx.js-1.2.4.tgz#f86dcf702d277dcbfc51ce218c0fed1909964b8b"
 
 glob-base@^0.3.0:
   version "0.3.0"

@@ -45,7 +45,7 @@
   let technique = new renderer.Technique(
     renderer.STAGE_TRANSPARENT,
     [
-      { name: 'mainTexture', type: renderer.PARAM_TEXTURE_2D },
+      { name: 'texture', type: renderer.PARAM_TEXTURE_2D },
       { name: 'color', type: renderer.PARAM_COLOR4, },
     ], [
       pass,
@@ -55,7 +55,6 @@
   let material = new renderer.Material(
     [technique],
     {
-      // mainTexture: ???,
       color: color4.new(1.0, 1.0, 1.0, 0.6),
     },
     {
@@ -81,7 +80,7 @@
         mipmap: true,
         images : [image]
       });
-      material.setValue('mainTexture', texture);
+      material.setValue('texture', texture);
     }
   });
 

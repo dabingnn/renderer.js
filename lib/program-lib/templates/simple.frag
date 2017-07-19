@@ -1,8 +1,8 @@
 // precision highp float;
 
 {{#useTexture}}
-  uniform sampler2D mainTexture;
-  varying vec2 uv;
+  uniform sampler2D texture;
+  varying vec2 uv0;
 {{/useTexture}}
 
 {{#useColor}}
@@ -13,7 +13,7 @@ void main () {
   vec4 o = vec4(1, 1, 1, 1);
 
   {{#useTexture}}
-    o *= texture2D(mainTexture, uv);
+    o *= texture2D(texture, uv0);
   {{/useTexture}}
 
   {{#useColor}}

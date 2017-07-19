@@ -80,7 +80,7 @@
       let material = new renderer.Material(
         techniques,
         {
-          mainTexture: texture,
+          texture: texture,
           color: color4.new(1.0, 1.0, 1.0, 0.6),
         },
         {

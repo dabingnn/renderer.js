@@ -1,5 +1,5 @@
-attribute vec4 a_weight;
-attribute vec4 a_joint;
+attribute vec4 a_weights;
+attribute vec4 a_joints;
 
 uniform sampler2D u_bonesTexture;
 uniform float u_bonesTextureSize;
@@ -25,9 +25,9 @@ mat4 getBoneMatrix(const in float i) {
 
 mat4 skinMatrix() {
   return
-    getBoneMatrix(a_joint.x) * a_weight.x +
-    getBoneMatrix(a_joint.y) * a_weight.y +
-    getBoneMatrix(a_joint.z) * a_weight.z +
-    getBoneMatrix(a_joint.w) * a_weight.w
+    getBoneMatrix(a_joints.x) * a_weights.x +
+    getBoneMatrix(a_joints.y) * a_weights.y +
+    getBoneMatrix(a_joints.z) * a_weights.z +
+    getBoneMatrix(a_joints.w) * a_weights.w
     ;
 }
