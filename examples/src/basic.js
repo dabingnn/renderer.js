@@ -21,7 +21,7 @@
   });
   let meshBox = renderer.createMesh(device, boxData);
 
-  // create material
+  // create effect
   let pass = new renderer.Pass('simple');
   // pass.setDepth(true, true);
   pass.setCullMode(gfx.CULL_FRONT);
@@ -52,7 +52,7 @@
       pass1
     ]
   );
-  let material = new renderer.Material(
+  let effect = new renderer.Effect(
     [technique],
     {
       color: color4.new(1.0, 1.0, 1.0, 0.6),
@@ -80,7 +80,7 @@
         mipmap: true,
         images : [image]
       });
-      material.setValue('texture', texture);
+      effect.setValue('texture', texture);
     }
   });
 
@@ -109,7 +109,7 @@
     let model = new renderer.Model();
     model.addMesh(meshBox);
 
-    model.addMaterial(material);
+    model.addEffect(effect);
     model.setNode(node);
 
     scene.addModel(model);

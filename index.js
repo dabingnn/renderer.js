@@ -1,10 +1,10 @@
 import enums from './lib/enums';
-import { createMesh, parseMaterial } from './lib/utils';
+import { createMesh } from './lib/utils';
 
-import Pass from './lib/resources/pass';
-import Technique from './lib/resources/technique';
-import Material from './lib/resources/material';
-import Mesh from './lib/resources/mesh';
+import Pass from './lib/renderer/pass';
+import Technique from './lib/renderer/technique';
+import Effect from './lib/renderer/effect';
+import Mesh from './lib/renderer/mesh';
 
 import Light from './lib/scene/light';
 import Camera from './lib/scene/camera';
@@ -17,12 +17,11 @@ import ProgramLib from './lib/program-lib/program-lib';
 let renderer = {
   // functions
   createMesh,
-  parseMaterial,
 
   // classes
   Pass,
   Technique,
-  Material,
+  Effect,
   Mesh,
 
   Light,

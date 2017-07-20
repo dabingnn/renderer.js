@@ -29,7 +29,7 @@ window.createGrid = function (node, width, length, seg) {
   });
   mesh._primitiveType = gfx.PT_LINES;
 
-  // create material
+  // create effect
   // let program = new gfx.Program(device, {
   //   vert: `
   //     precision highp float;
@@ -65,7 +65,7 @@ window.createGrid = function (node, width, length, seg) {
       pass
     ]
   );
-  let material = new renderer.Material(
+  let effect = new renderer.Effect(
     [
       technique
     ],
@@ -80,7 +80,7 @@ window.createGrid = function (node, width, length, seg) {
 
   let model = new renderer.Model();
   model.addMesh(mesh);
-  model.addMaterial(material);
+  model.addEffect(effect);
   model.setNode(node);
 
   return model;
