@@ -65,7 +65,7 @@
         item.node.getWorldPos(_v3_tmp1);
 
         vec3.sub(_v3_tmp1, _v3_tmp1, _camPos);
-        item.zdist = vec3.dot(_v3_tmp1, _camFwd);
+        item.key = vec3.dot(_v3_tmp1, _camFwd); // zdist
       }
 
       // sort items
@@ -74,7 +74,7 @@
           return a.technique._layer - b.technique._layer;
         }
 
-        return b.zdist - a.zdist;
+        return b.key - a.key;
       });
 
       // draw it
