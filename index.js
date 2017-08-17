@@ -14,6 +14,11 @@ import Scene from './lib/scene/scene';
 import Base from './lib/renderer/base';
 import ProgramLib from './lib/program-lib/program-lib';
 
+import Ray from './lib/shape/ray';
+import Plane from './lib/shape/plane';
+import Sphere from './lib/shape/sphere';
+import Frustum from './lib/shape/frustum';
+
 let renderer = {
   // functions
   createMesh,
@@ -31,6 +36,10 @@ let renderer = {
 
   Base,
   ProgramLib,
+  Ray,
+  Plane,
+  Sphere,
+  Frustum,
 };
 Object.assign(renderer, enums);
 
