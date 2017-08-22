@@ -1,0 +1,35 @@
+{
+  "techniques": [
+    {
+      "stages": [
+        "transparent"
+      ],
+      "parameters": {
+        "mainTexture": {
+          "type": "tex2d"
+        },
+        "color": {
+          "type": "color4"
+        }
+      },
+      "passes": [
+        {
+          "program": "simple",
+          "blend": "add src_alpha one_minus_src_alpha",
+          "blendAlpha": "add one one",
+          "blendColor": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "cull": "back",
+          "depthTest": "less",
+          "depthWrite": false,
+          "stencil": "always 0x0 0xff keep keep keep 0xff",
+          "stencilBack": "always 0x0 0xff keep keep keep 0xff"
+        }
+      ]
+    }
+  ]
+}
