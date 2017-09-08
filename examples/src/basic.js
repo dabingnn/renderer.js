@@ -57,10 +57,10 @@
     {
       color: color4.new(1.0, 1.0, 1.0, 0.6),
     },
-    {
-      useTexture: true,
-      useColor: true,
-    }
+    [
+      { name: 'useTexture', value: true },
+      { name: 'useColor', value: true },
+    ]
   );
 
   resl({
@@ -124,15 +124,13 @@
   let camera = new renderer.Camera();
   camera.setNode(orbit._node);
 
+  scene.addCamera(camera);
+
   let time = 0;
 
   // tick
   return function tick(dt) {
     time += dt;
-
-    camera._rect.w = canvas.width;
-    camera._rect.h = canvas.height;
-
-    simpleRenderer.render(camera, scene);
+    simpleRenderer.render(scene);
   };
 })();

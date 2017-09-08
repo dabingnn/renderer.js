@@ -20,21 +20,29 @@
       this._stage2fn[renderer.STAGE_TRANSPARENT] = this._transparentStage.bind(this);
     }
 
-    render(camera, scene) {
+    render(scene) {
+      let canvas = this._device._gl.canvas;
       this._reset();
-      camera.updateMatrix();
 
-      this._render(camera, scene, [
-        renderer.STAGE_OPAQUE,
-        renderer.STAGE_TRANSPARENT,
-      ]);
+      for (let i = 0; i < scene._cameras.length; ++i) {
+        let view = this._requestView();
+        scene._cameras.data[i].extractView(view, canvas.width, canvas.height);
+      }
+
+      for (let i = 0; i < this._viewPools.length; ++i) {
+        let view = this._viewPools.data[i];
+        this._render(view, scene, [
+          renderer.STAGE_OPAQUE,
+          renderer.STAGE_TRANSPARENT,
+        ]);
+      }
     }
 
-    _opaqueStage(camera, items) {
+    _opaqueStage(view, items) {
       // update uniforms
-      this._device.setUniform('view', mat4.array(_a16_view, camera._view));
-      this._device.setUniform('proj', mat4.array(_a16_proj, camera._proj));
-      this._device.setUniform('viewProj', mat4.array(_a16_viewProj, camera._viewProj));
+      this._device.setUniform('view', mat4.array(_a16_view, view._matView));
+      this._device.setUniform('proj', mat4.array(_a16_proj, view._matProj));
+      this._device.setUniform('viewProj', mat4.array(_a16_viewProj, view._matViewProj));
 
       // sort items
       items.sort((a, b) => {
@@ -48,15 +56,15 @@
       }
     }
 
-    _transparentStage(camera, items) {
+    _transparentStage(view, items) {
       // update uniforms
-      this._device.setUniform('view', mat4.array(_a16_view, camera._view));
-      this._device.setUniform('proj', mat4.array(_a16_proj, camera._proj));
-      this._device.setUniform('viewProj', mat4.array(_a16_viewProj, camera._viewProj));
+      this._device.setUniform('view', mat4.array(_a16_view, view._matView));
+      this._device.setUniform('proj', mat4.array(_a16_proj, view._matProj));
+      this._device.setUniform('viewProj', mat4.array(_a16_viewProj, view._matViewProj));
 
       // calculate zdist
-      camera._node.getWorldPos(_camPos);
-      vec3.set(_camFwd, -camera._view.m02, -camera._view.m06, -camera._view.m10);
+      view.getPosition(_camPos);
+      view.getForward(_camFwd);
 
       for (let i = 0; i < items.length; ++i) {
         let item = items.data[i];

@@ -72,10 +72,10 @@ window.createGrid = function (node, width, length, seg) {
     {
       color: color4.new(0.4, 0.4, 0.4, 1.0),
     },
-    {
-      useTexture: false,
-      useColor: true,
-    }
+    [
+      { name: 'useTexture', value: false },
+      { name: 'useColor', value: true },
+    ]
   );
 
   let model = new renderer.Model();
