@@ -1,6 +1,6 @@
 {
   "name": "renderer.js",
-  "version": "1.3.2",
+  "version": "1.4.0",
   "description": "A forward renderer",
   "main": "dist/renderer.js",
   "module": "index.js",
