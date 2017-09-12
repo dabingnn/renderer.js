@@ -1,6 +1,5 @@
 (() => {
   const {
-    canvas,
     device,
     resl,
     gfx,
@@ -13,13 +12,13 @@
   const orbit = window.orbit;
   const simpleRenderer = window.simpleRenderer;
 
-  // create mesh
+  // create IA
   let boxData = primitives.box(1, 1, 1, {
     widthSegments: 1,
     heightSegments: 1,
     lengthSegments: 1,
   });
-  let meshBox = renderer.createMesh(device, boxData);
+  let boxIA = renderer.createIA(device, boxData);
 
   // create effect
   let pass = new renderer.Pass('simple');
@@ -107,7 +106,7 @@
     );
 
     let model = new renderer.Model();
-    model.addMesh(meshBox);
+    model.addInputAssembler(boxIA);
 
     model.addEffect(effect);
     model.setNode(node);

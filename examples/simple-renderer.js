@@ -68,8 +68,6 @@
 
       for (let i = 0; i < items.length; ++i) {
         let item = items.data[i];
-
-        // TODO: we should use mesh center instead!
         item.node.getWorldPos(_v3_tmp1);
 
         vec3.sub(_v3_tmp1, _v3_tmp1, _camPos);

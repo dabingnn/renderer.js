@@ -7,7 +7,7 @@ window.createGrid = function (node, width, length, seg) {
 
   const { color4 } = window.vmath;
 
-  // create mesh
+  // create IA
   let vertices = [];
   let hw = width * 0.5;
   let hl = length * 0.5;
@@ -24,10 +24,10 @@ window.createGrid = function (node, width, length, seg) {
     vertices.push(hw, 0, z);
   }
 
-  let mesh = renderer.createMesh(device, {
+  let ia = renderer.createIA(device, {
     positions: vertices
   });
-  mesh._primitiveType = gfx.PT_LINES;
+  ia._primitiveType = gfx.PT_LINES;
 
   // create effect
   // let program = new gfx.Program(device, {
@@ -79,7 +79,7 @@ window.createGrid = function (node, width, length, seg) {
   );
 
   let model = new renderer.Model();
-  model.addMesh(mesh);
+  model.addInputAssembler(ia);
   model.addEffect(effect);
   model.setNode(node);
 
