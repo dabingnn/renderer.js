@@ -45,7 +45,7 @@
     "gfx.js": "^1.2.6",
     "input.js": "^1.1.6",
     "lstats.js": "^1.2.6",
-    "memop": "^1.4.5",
+    "memop": "^1.6.0",
     "preview-server": "^1.0.7",
     "primitives.js": "^1.0.0",
     "rollup": "^0.43.0",

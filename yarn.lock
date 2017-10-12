@@ -954,9 +954,9 @@ mem@^1.1.0:
   dependencies:
     mimic-fn "^1.0.0"
 
-memop@^1.4.5:
-  version "1.4.5"
-  resolved "https://registry.yarnpkg.com/memop/-/memop-1.4.5.tgz#dcbd1c0817c80190d7e10dbdb866fe8e9411d1d5"
+memop@^1.6.0:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/memop/-/memop-1.6.0.tgz#75cc9cb5acf3f170cc806a6fb0c1e4d454f55a9a"
 
 meow@^3.1.0:
   version "3.7.0"
