@@ -12,12 +12,15 @@
   let _a16_proj = new Float32Array(16);
   let _a16_viewProj = new Float32Array(16);
 
+  renderer.addStage('opaque');
+  renderer.addStage('transparent');
+
   class SimpleRenderer extends renderer.Base {
     constructor(device, opts) {
       super(device, opts);
 
-      this._stage2fn[renderer.STAGE_OPAQUE] = this._opaqueStage.bind(this);
-      this._stage2fn[renderer.STAGE_TRANSPARENT] = this._transparentStage.bind(this);
+      this._registerStage('opaque', this._opaqueStage.bind(this));
+      this._registerStage('transparent', this._transparentStage.bind(this));
     }
 
     render(scene) {
@@ -32,8 +35,8 @@
       for (let i = 0; i < this._viewPools.length; ++i) {
         let view = this._viewPools.data[i];
         this._render(view, scene, [
-          renderer.STAGE_OPAQUE,
-          renderer.STAGE_TRANSPARENT,
+          'opaque',
+          'transparent'
         ]);
       }
     }
