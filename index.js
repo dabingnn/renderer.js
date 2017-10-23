@@ -6,6 +6,7 @@ import Pass from './lib/renderer/pass';
 import Technique from './lib/renderer/technique';
 import Effect from './lib/renderer/effect';
 import InputAssembler from './lib/renderer/input-assembler';
+import View from './lib/renderer/view';
 
 import Light from './lib/scene/light';
 import Camera from './lib/scene/camera';
@@ -27,6 +28,7 @@ let renderer = {
   Technique,
   Effect,
   InputAssembler,
+  View,
 
   Light,
   Camera,
