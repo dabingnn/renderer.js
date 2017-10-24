@@ -57,7 +57,7 @@ window.createGrid = function (node, width, length, seg) {
   let pass = new renderer.Pass('simple');
   pass.setDepth(true, true);
   let technique = new renderer.Technique(
-    renderer.STAGE_OPAQUE,
+    ['opaque'],
     [
       { name: 'color', type: renderer.PARAM_COLOR4, },
     ],

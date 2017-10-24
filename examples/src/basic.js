@@ -42,7 +42,7 @@
   );
 
   let technique = new renderer.Technique(
-    renderer.STAGE_TRANSPARENT,
+    ['transparent'],
     [
       { name: 'texture', type: renderer.PARAM_TEXTURE_2D },
       { name: 'color', type: renderer.PARAM_COLOR4, },

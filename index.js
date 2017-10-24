@@ -1,10 +1,12 @@
 import enums from './lib/enums';
 import { createIA } from './lib/utils';
+import config from './lib/config';
 
 import Pass from './lib/renderer/pass';
 import Technique from './lib/renderer/technique';
 import Effect from './lib/renderer/effect';
 import InputAssembler from './lib/renderer/input-assembler';
+import View from './lib/renderer/view';
 
 import Light from './lib/scene/light';
 import Camera from './lib/scene/camera';
@@ -15,7 +17,10 @@ import Base from './lib/renderer/base';
 import ProgramLib from './lib/program-lib/program-lib';
 
 let renderer = {
-  // functions
+  // config
+  addStage: config.addStage,
+
+  // utils
   createIA,
 
   // classes
@@ -23,6 +28,7 @@ let renderer = {
   Technique,
   Effect,
   InputAssembler,
+  View,
 
   Light,
   Camera,
