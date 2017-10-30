@@ -34,10 +34,7 @@
 
       for (let i = 0; i < this._viewPools.length; ++i) {
         let view = this._viewPools.data[i];
-        this._render(view, scene, [
-          'opaque',
-          'transparent'
-        ]);
+        this._render(view, scene);
       }
     }
 

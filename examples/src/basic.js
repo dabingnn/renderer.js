@@ -122,6 +122,10 @@
   // camera
   let camera = new renderer.Camera();
   camera.setNode(orbit._node);
+  camera.setStages([
+    'opaque',
+    'transparent'
+  ]);
 
   scene.addCamera(camera);
 
